@@ -20,7 +20,7 @@
 .. have should hopefully not get complex enough that we need to worry about
 .. versioning it.
 
-Introduction
+前言
 ------------
 .. WARNING::
   The Matrix specification is still evolving: the APIs are not yet frozen
@@ -31,70 +31,50 @@ Introduction
   goal is to mirror WHATWG's `Living Standard
   <http://wiki.whatwg.org/wiki/FAQ#What_does_.22Living_Standard.22_mean.3F>`_.
 
-Matrix is a set of open APIs for open-federated Instant Messaging (IM), Voice
-over IP (VoIP) and Internet of Things (IoT) communication, designed to create
-and support a new global real-time communication ecosystem. The intention is to
-provide an open decentralised pubsub layer for the internet for securely
-persisting and publishing/subscribing JSON objects. This specification is the
-ongoing result of standardising the APIs used by the various components of the
-Matrix ecosystem to communicate with one another.
+Matrix是一套用于开放联盟的即时通信（IM），IP语音（VoIP）和物联网（IoT）通信的开放API，设计于建立并支持一个新的全球实时通信生态系统。目的是为因特网提供一个开放去中心化的发布/订阅（pubsub）层，用于安全地发布/订阅JSON对象。这个规范是不间断地标准化被不同Matrix生态系统组件用来互相交流所使用的API的结果。
 
-The principles that Matrix attempts to follow are:
+Matrix尝试遵循的原则是：
 
-- Pragmatic Web-friendly APIs (i.e. JSON over REST)
-- Keep It Simple & Stupid
+- 务实的对web友好的API（即REST上的JSON）
+- 保持简单，且一目了然（Keep It Simple & Stupid）
 
-  + provide a simple architecture with minimal third-party dependencies.
+  + 提供一个使用第三方依赖最少的简单架构。
 
-- Fully open:
+- 完全开放：
 
-  + Fully open federation - anyone should be able to participate in the global
-    Matrix network
-  + Fully open standard - publicly documented standard with no IP or patent
-    licensing encumbrances
-  + Fully open source reference implementation - liberally-licensed example
-    implementations with no IP or patent licensing encumbrances
+  + 完全开放的联盟——每个人应当可以参与全球Matrix网络
+  + 完全开放的标准——带公开文档的标准，没有知识产权或专利授权负担
+  + 完全开放源代码的参考实现——自由许可证的样例实现，没有知识产权或专利授权负担
 
-- Empowering the end-user
+- 授予用户权力
 
-  + The user should be able to choose the server and clients they use
-  + The user should be control how private their communication is
-  + The user should know precisely where their data is stored
+  + 用户应该能够选择他们使用的服务器和客户端
+  + 用户应当控制他们的通信有多秘密
+  + 用户应当准确地知道他们的数据存储在什么地方
 
-- Fully decentralised - no single points of control over conversations or the
-  network as a whole
-- Learning from history to avoid repeating it
+- 完全去中心化——没有单一的控制会话或整个网络的节点
+- 从历史获得教训从而避免重复历史
 
-  + Trying to take the best aspects of XMPP, SIP, IRC, SMTP, IMAP and NNTP
-    whilst trying to avoid their failings
+  + 尝试吸取 XMPP, SIP, IRC, SMTP, IMAP 和 NNTP 最好的方面，同时尝试避免它们的的弱点
 
 
-The functionality that Matrix provides includes:
+Matrix提供的功能包括：
 
-- Creation and management of fully distributed chat rooms with no
-  single points of control or failure
-- Eventually-consistent cryptographically secure synchronisation of room
-  state across a global open network of federated servers and services
-- Sending and receiving extensible messages in a room with (optional)
-  end-to-end encryption
-- Extensible user management (inviting, joining, leaving, kicking, banning)
-  mediated by a power-level based user privilege system.
-- Extensible room state management (room naming, aliasing, topics, bans)
-- Extensible user profile management (avatars, display names, etc)
-- Managing user accounts (registration, login, logout)
-- Use of 3rd Party IDs (3PIDs) such as email addresses, phone numbers,
-  Facebook accounts to authenticate, identify and discover users on Matrix.
-- Trusted federation of Identity servers for:
+- 完全分布式聊天室的创建和管理，没有单点控制或失败
+- 在全球开放联盟服务器和服务的网络上的最终一致性的密码学安全的聊天室状态同步
+- 在聊天室发送接收可扩展消息，带（可选的）端到端加密
+- 基于权力级别的用户权限系统所仲裁的可扩展用户管理（邀请、加入、离开、提出、禁止）
+- 可扩展的聊天室状态管理（聊天室命名、别名、话题、禁令）
+- 可扩展的用户资料管理（头像、显示的名字等等）
+- 管理用户账户（注册、登录、登出）
+- 在Matrix上使用第三方ID（3PID）例如邮箱帐号、电话号码、Facebook帐号来认证、识别和发现用户
+- 用于以下目的的可信身份服务器联盟：
 
-  + Publishing user public keys for PKI
-  + Mapping of 3PIDs to Matrix IDs
+  + 发布用户密钥用于公钥基础设施（PKI）
+  + 3PID到Matrix ID的映射
 
 
-The end goal of Matrix is to be a ubiquitous messaging layer for synchronising
-arbitrary data between sets of people, devices and services - be that for
-instant messages, VoIP call setups, or any other objects that need to be
-reliably and persistently pushed from A to B in an interoperable and federated
-manner.
+Matrix的最终目标是成为无所不在的用于在人群、设备和服务集合之间同步任意数据的消息层，可以用于即时通信，VoIP通话的建立，或者其他需要可靠和持续以可互操作和联合的方式从A到B推送的对象。
 
 Architecture
 ------------
