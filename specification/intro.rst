@@ -20,7 +20,7 @@
 .. have should hopefully not get complex enough that we need to worry about
 .. versioning it.
 
-Introduction
+前言
 ------------
 .. WARNING::
   The Matrix specification is still evolving: the APIs are not yet frozen
@@ -31,70 +31,50 @@ Introduction
   goal is to mirror WHATWG's `Living Standard
   <https://whatwg.org/faq?#living-standard>`_.
 
-Matrix is a set of open APIs for open-federated Instant Messaging (IM), Voice
-over IP (VoIP) and Internet of Things (IoT) communication, designed to create
-and support a new global real-time communication ecosystem. The intention is to
-provide an open decentralised pubsub layer for the internet for securely
-persisting and publishing/subscribing JSON objects. This specification is the
-ongoing result of standardising the APIs used by the various components of the
-Matrix ecosystem to communicate with one another.
+Matrix是一套用于开放联盟的即时通信（IM），IP语音（VoIP）和物联网（IoT）通信的开放API，设计于建立并支持一个新的全球实时通信生态系统。目的是为因特网提供一个开放去中心化的发布/订阅（pubsub）层，用于安全地发布/订阅JSON对象。这个规范是不间断地标准化被不同Matrix生态系统组件用来互相交流所使用的API的结果。
 
-The principles that Matrix attempts to follow are:
+Matrix尝试遵循的原则是：
 
-- Pragmatic Web-friendly APIs (i.e. JSON over REST)
-- Keep It Simple & Stupid
+- 务实的对web友好的API（即REST上的JSON）
+- 保持简单，且一目了然（Keep It Simple & Stupid）
 
-  + provide a simple architecture with minimal third-party dependencies.
+  + 提供一个使用第三方依赖最少的简单架构。
 
-- Fully open:
+- 完全开放：
 
-  + Fully open federation - anyone should be able to participate in the global
-    Matrix network
-  + Fully open standard - publicly documented standard with no IP or patent
-    licensing encumbrances
-  + Fully open source reference implementation - liberally-licensed example
-    implementations with no IP or patent licensing encumbrances
+  + 完全开放的联盟——每个人应当可以参与全球Matrix网络
+  + 完全开放的标准——带公开文档的标准，没有知识产权或专利授权负担
+  + 完全开放源代码的参考实现——自由许可证的样例实现，没有知识产权或专利授权负担
 
-- Empowering the end-user
+- 授予用户权力
 
-  + The user should be able to choose the server and clients they use
-  + The user should be control how private their communication is
-  + The user should know precisely where their data is stored
+  + 用户应该能够选择他们使用的服务器和客户端
+  + 用户应当控制他们的通信有多秘密
+  + 用户应当准确地知道他们的数据存储在什么地方
 
-- Fully decentralised - no single points of control over conversations or the
-  network as a whole
-- Learning from history to avoid repeating it
+- 完全去中心化——没有单一的控制会话或整个网络的节点
+- 从历史获得教训从而避免重复历史
 
-  + Trying to take the best aspects of XMPP, SIP, IRC, SMTP, IMAP and NNTP
-    whilst trying to avoid their failings
+  + 尝试吸取 XMPP, SIP, IRC, SMTP, IMAP 和 NNTP 最好的方面，同时尝试避免它们的的弱点
 
 
-The functionality that Matrix provides includes:
+Matrix提供的功能包括：
 
-- Creation and management of fully distributed chat rooms with no
-  single points of control or failure
-- Eventually-consistent cryptographically secure synchronisation of room
-  state across a global open network of federated servers and services
-- Sending and receiving extensible messages in a room with (optional)
-  end-to-end encryption
-- Extensible user management (inviting, joining, leaving, kicking, banning)
-  mediated by a power-level based user privilege system.
-- Extensible room state management (room naming, aliasing, topics, bans)
-- Extensible user profile management (avatars, display names, etc)
-- Managing user accounts (registration, login, logout)
-- Use of 3rd Party IDs (3PIDs) such as email addresses, phone numbers,
-  Facebook accounts to authenticate, identify and discover users on Matrix.
-- Trusted federation of Identity servers for:
+- 完全分布式聊天室的创建和管理，没有单点控制或失败
+- 在全球开放联盟服务器和服务的网络上的最终一致性的密码学安全的聊天室状态同步
+- 在聊天室发送接收可扩展消息，带（可选的）端到端加密
+- 基于权力级别的用户权限系统所仲裁的可扩展用户管理（邀请、加入、离开、提出、禁止）
+- 可扩展的聊天室状态管理（聊天室命名、别名、话题、禁令）
+- 可扩展的用户资料管理（头像、显示的名字等等）
+- 管理用户账户（注册、登录、登出）
+- 在Matrix上使用第三方ID（3PID）例如邮箱帐号、电话号码、Facebook帐号来认证、识别和发现用户
+- 用于以下目的的可信身份服务器联盟：
 
-  + Publishing user public keys for PKI
-  + Mapping of 3PIDs to Matrix IDs
+  + 发布用户密钥用于公钥基础设施（PKI）
+  + 3PID到Matrix ID的映射
 
 
-The end goal of Matrix is to be a ubiquitous messaging layer for synchronising
-arbitrary data between sets of people, devices and services - be that for
-instant messages, VoIP call setups, or any other objects that need to be
-reliably and persistently pushed from A to B in an interoperable and federated
-manner.
+Matrix的最终目标是成为无所不在的用于在人群、设备和服务集合之间同步任意数据的消息层，可以用于即时通信，VoIP通话的建立，或者其他需要可靠和持续以可互操作和联合的方式从A到B推送的对象。
 
 Architecture
 ------------
@@ -148,17 +128,14 @@ a long-lived GET request.
                                   (Federation)
 
 
-Users
+用户
 ~~~~~
 
-Each client is associated with a user account, which is identified in Matrix
-using a unique "user ID". This ID is namespaced to the homeserver which
-allocated the account and has the form::
+每个客户端和一个用户帐号关联，它在Matrix中用一个独有的“用户ID”标识。这个ID在分配这个帐号的homeserver的名称空间之下并有这样的形式::
 
   @localpart:domain
 
-See the `Identifier Grammar`_ section for full details of the structure of
-user IDs.
+请参见 `标识符语法`_ 一节了解用户ID结构的全部细节。
 
 
 Devices
@@ -242,7 +219,7 @@ There is exactly one room ID for each room. Whilst the room ID does contain a
 domain, it is simply for globally namespacing room IDs. The room does NOT
 reside on the domain specified.
 
-See the `Identifier Grammar`_ section for full details of the structure of
+See the `标识符语法`_ section for full details of the structure of
 a room ID.
 
 The following conceptual diagram shows an
@@ -318,7 +295,7 @@ Each room can also have multiple "Room Aliases", which look like::
 
   #room_alias:domain
 
-See the `Identifier Grammar`_ section for full details of the structure of
+See the `标识符语法`_ section for full details of the structure of
 a room alias.
 
 A room alias "points" to a room ID and is the human-readable label by which
@@ -388,10 +365,10 @@ dedicated API.  The API is symmetrical to managing Profile data.
   private user data, but with different ACLs?
 
 
-Identifier Grammar
+标识符语法
 ------------------
 
-Server Name
+服务器名称
 ~~~~~~~~~~~
 
 A homeserver is uniquely identified by its server name. This value is used in a
@@ -426,7 +403,7 @@ the form::
 
   &localpart:domain
 
-where ``&`` represents a 'sigil' character; ``domain`` is the `server name`_ of
+where ``&`` represents a 'sigil' character; ``domain`` is the `服务器名称`_ of
 the homeserver which allocated the identifier, and ``localpart`` is an
 identifier allocated by that homeserver.
 
@@ -453,7 +430,7 @@ The ``localpart`` of a user ID is an opaque identifier for that user. It MUST
 NOT be empty, and MUST contain only the characters ``a-z``, ``0-9``, ``.``,
 ``_``, ``=``, and ``-``.
 
-The ``domain`` of a user ID is the `server name`_ of the homeserver which
+The ``domain`` of a user ID is the `服务器名称`_ of the homeserver which
 allocated the account.
 
 The length of a user ID, including the ``@`` sigil and the domain, MUST NOT
@@ -561,42 +538,34 @@ consistently. However, we suggest the following algorithm:
   encode ASCII punctuation).
 
 
-Room IDs and Event IDs
+聊天室 ID 和事件 ID
 ++++++++++++++++++++++
 
-A room has exactly one room ID. A room ID has the format::
+一个聊天室有且仅有一个聊天室 ID. 一个聊天室 ID 有如下格式::
 
   !opaque_id:domain
 
-An event has exactly one event ID. An event ID has the format::
+一个事件有且仅有一个事件 ID. 一个事件 ID 有如下格式::
 
   $opaque_id:domain
 
-The ``domain`` of a room/event ID is the `server name`_ of the homeserver which
-created the room/event. The domain is used only for namespacing to avoid the
-risk of clashes of identifiers between different homeservers. There is no
-implication that the room or event in question is still available at the
-corresponding homeserver.
+一个聊天室/事件 ID 的 ``domain`` 是创建这个聊天室/事件的 homeserver 的 `服务器名称`_。域名仅作为命名空间以防止不同 homeserver 的标识符冲突。并不意味着讨论中的聊天室或事件在对应的 homeserver 上还可用。
 
-Event IDs and Room IDs are case-sensitive. They are not meant to be human
-readable.
+事件 ID 和聊天室 ID 是大小写敏感的。它们并不设计为人类可读。
 
 .. TODO-spec
   What is the grammar for the opaque part? https://matrix.org/jira/browse/SPEC-389
 
-Room Aliases
+聊天室别名
 ++++++++++++
 
-A room may have zero or more aliases. A room alias has the format::
+一个聊天室可以有零个或多个别名。一个聊天室别名有如下格式::
 
       #room_alias:domain
 
-The ``domain`` of a room alias is the `server name`_ of the homeserver which
-created the alias. Other servers may contact this homeserver to look up the
-alias.
+聊天室别名的 ``domain`` 是创建这个别名的 homeserver 的 `服务器名称`_ . 其他服务器可以联系这个  homeserver 来查询这个别名。
 
-Room aliases MUST NOT exceed 255 bytes (including the ``#`` sigil and the
-domain).
+聊天室别名不能超过 255 字节（包括井号和域名）。
 
 .. TODO-spec
   - Need to specify precise grammar for Room Aliases. https://matrix.org/jira/browse/SPEC-391
