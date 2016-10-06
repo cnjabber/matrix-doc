@@ -107,76 +107,56 @@ Matrix优化了CAP定理中的可用性和网络分区性，以一致性为代�
                                   (Federation)
 
 
-Users
+用户
 ~~~~~
 
-Each client is associated with a user account, which is identified in Matrix
-using a unique "user ID". This ID is namespaced to the homeserver which
-allocated the account and has the form::
+每个客户和一个用户帐号关联，它用一个独一无二的“用户ID”在Matrix中被识别。这个ID在分配这个帐号的homeserver的命名空间下，并有如下形式::
 
   @localpart:domain
 
-See the `Identifier Grammar`_ section for full details of the structure of
-user IDs.
+见 `标识符语法`_ 一节以获得用户ID结构的完整细节。
 
-Events
+事件
 ~~~~~~
 
-All data exchanged over Matrix is expressed as an "event". Typically each client
-action (e.g. sending a message) correlates with exactly one event. Each event
-has a ``type`` which is used to differentiate different kinds of data. ``type``
-values MUST be uniquely globally namespaced following Java's `package naming
-conventions`_, e.g.
-``com.example.myapp.event``. The special top-level namespace ``m.`` is reserved
-for events defined in the Matrix specification - for instance ``m.room.message``
-is the event type for instant messages. Events are usually sent in the context
-of a "Room".
+所有在Matrix上交换的数据都被表达为一个“事件(event)”。通常每个客户端操作（如发送一条消息）准确地对应一个事件。
+每个事件有一个 ``类型`` 用来区分不同种类的数据。 ``类型`` 值必须独一无二地依据Java的 `包命名约定`_ 放在全局命名空间中，例如
+``com.example.myapp.event``. 特殊的顶级命名空间 ``m.`` 被保留用于Matrix规范中定义的事件 —— 例如
+``m.room.message`` 是用于即时消息的事件类型。事件通常在一个“房间”的上下文下发送。
 
-.. _package naming conventions: https://en.wikipedia.org/wiki/Java_package#Package_naming_conventions
+.. _包命名约定: https://en.wikipedia.org/wiki/Java_package#Package_naming_conventions
 
-Event Graphs
+事件图
 ~~~~~~~~~~~~
 
 .. _sect:event-graph:
 
-Events exchanged in the context of a room are stored in a directed acyclic graph
-(DAG) called an "event graph". The partial ordering of this graph gives the
-chronological ordering of events within the room. Each event in the graph has a
-list of zero or more "parent" events, which refer to any preceding events
-which have no chronological successor from the perspective of the homeserver
-which created the event.
+在一个房间上下文中交换的事件被存储在一个称为“事件图(event graph)”的有向无环图(DAG)中。
+这个图的部分有序性给出了房间中事件的事件顺序。图中的每个事件有一个零个或多个父事件的列表，
+它指的是任意从创建这个事件的homeserver的角度上没有时间上后继的在前的事件。
 
-Typically an event has a single parent: the most recent message in the room at
-the point it was sent. However, homeservers may legitimately race with each
-other when sending messages, resulting in a single event having multiple
-successors. The next event added to the graph thus will have multiple parents.
-Every event graph has a single root event with no parent.
+通常一个事件有一个单独的父事件：房间中在它被发出的时候最近的消息。然而，homeserver可能在发送消息的时候合法地互相竞争，
+造成了一个单独的事件有多个后继。下一个添加到图中的事件于是就有了多个父事件。
+每个事件图有一个没有父事件的根事件。
 
-To order and ease chronological comparison between the events within the graph,
-homeservers maintain a ``depth`` metadata field on each event. An event's
-``depth`` is a positive integer that is strictly greater than the depths of any
-of its parents. The root event should have a depth of 1. Thus if one event is
-before another, then it must have a strictly smaller depth.
+为了排序及简化图中事件之间时间的比较，homeserver在每个事件维护一个 ``深度`` 元数据字段。
+一个事件的 ``深度`` 是一个正整数，它严格大于任何一个父事件的深度。根事件应当有深度1。从而如果一个事件在另一个事件之前，
+它就必须有一个严格更小的深度。
 
-Room structure
+房间结构
 ~~~~~~~~~~~~~~
 
-A room is a conceptual place where users can send and receive events. Events are
-sent to a room, and all participants in that room with sufficient access will
-receive the event. Rooms are uniquely identified internally via "Room IDs",
-which have the form::
+一个房间是用户可以发送接受事件的一个概念上的地点。事件被发送到房间里，并且所有在那个房间的有足够访问权限的参与者会收到这个事件。
+房间被独一无二地在内部通过“房间ID”被标识，它有这样的形式::
 
   !opaque_id:domain
 
-There is exactly one room ID for each room. Whilst the room ID does contain a
-domain, it is simply for globally namespacing room IDs. The room does NOT
-reside on the domain specified.
+每个房间有一个房间ID。同时房间ID包含一个域，它是用来做房间ID的全局命名空间的。房间并不属于被指定的那个域。
 
-See the `Identifier Grammar`_ section for full details of the structure of
-a room ID.
+见 `标识符语法`_ 一节来获取房间ID结构的完整细节。
 
-The following conceptual diagram shows an
-``m.room.message`` event being sent to the room ``!qporfwt:matrix.org``::
+以下概念性的图表展现了一个
+``m.room.message`` 事件，它正在被发送到房间 ``!qporfwt:matrix.org``::
 
        { @alice:matrix.org }                             { @bob:domain.com }
                |                                                 ^
@@ -214,10 +194,9 @@ The following conceptual diagram shows an
                     |     Content: { JSON object }      |
                     |...................................|
 
-Federation maintains *shared data structures* per-room between multiple home
-servers. The data is split into ``message events`` and ``state events``.
+联盟在多个homeserver之间维护每个房间的 *共享数据结构* 。数据被分割为 ``消息事件`` 和 ``状态事件`` 。
 
-Message events:
+events:
   These describe transient 'once-off' activity in a room such as an
   instant messages, VoIP call setups, file transfers, etc. They generally
   describe communication activity.
@@ -248,7 +227,7 @@ Each room can also have multiple "Room Aliases", which look like::
 
   #room_alias:domain
 
-See the `Identifier Grammar`_ section for full details of the structure of
+See the `标识符语法`_ section for full details of the structure of
 a room alias.
 
 A room alias "points" to a room ID and is the human-readable label by which
@@ -318,7 +297,7 @@ dedicated API.  The API is symmetrical to managing Profile data.
   private user data, but with different ACLs?
 
 
-Identifier Grammar
+标识符语法
 ------------------
 
 Server Name
