@@ -23,12 +23,9 @@
 前言
 ------------
 .. WARNING::
-  The Matrix specification is still evolving: the APIs are not yet frozen
-  and this document is in places a work in progress or stale. We have made every
-  effort to clearly flag areas which are still being finalised.
-  We're publishing it at this point because it's complete enough to be more than
-  useful and provide a canonical reference to how Matrix is evolving. Our end
-  goal is to mirror WHATWG's `Living Standard
+  Matrix 的规范还在演化当中：API还没有冻结并且这份文档还在完成的过程中或者已过时。我们已经做出了每种努力来清晰地指出还待完成的地方。
+  我们在这个时间点发布它，因为它已经足够完整以用于实用，并且提供了一个 Matrix 演化的方式的权威的引用。
+  我们的最终目标是成为网页超文本应用技术小组(WHATWG)的 `Living Standard
   <http://wiki.whatwg.org/wiki/FAQ#What_does_.22Living_Standard.22_mean.3F>`_.
 
 Matrix是一套用于开放联盟的即时通信（IM），IP语音（VoIP）和物联网（IoT）通信的开放API，设计于建立并支持一个新的全球实时通信生态系统。目的是为因特网提供一个开放去中心化的发布/订阅（pubsub）层，用于安全地发布/订阅JSON对象。这个规范是不间断地标准化被不同Matrix生态系统组件用来互相交流所使用的API的结果。
@@ -76,39 +73,21 @@ Matrix提供的功能包括：
 
 Matrix的最终目标是成为无所不在的用于在人群、设备和服务集合之间同步任意数据的消息层，可以用于即时通信，VoIP通话的建立，或者其他需要可靠和持续以可互操作和联合的方式从A到B推送的对象。
 
-Architecture
+架构
 ------------
 
-Matrix defines APIs for synchronising extensible JSON objects known as
-"events" between compatible clients, servers and services. Clients are
-typically messaging/VoIP applications or IoT devices/hubs and communicate by
-synchronising communication history with their "homeserver" using the
-"Client-Server API". Each homeserver stores the communication history and
-account information for all of its clients, and shares data with the wider
-Matrix ecosystem by synchronising communication history with other homeservers
-and their clients.
+Matrix 定义了用于同步可扩展 JSON 对象，人们称为在兼容客户端、服务端和服务之间的“事件(event)”的 API。
+客户端通常是消息/VoIP应用或者是 IoT 设备/集线器，并且通过使用“客户端-服务端 API”和他们的“homeserver”同步通信历史来交流。
+每个homeserver为所有客户端存储通信历史和账户信息，并且通过和其他 homeserver 和它们的客户端同步通信历史的方法和更宽阔的 Matrix 生态系统共享数据。
 
-Clients typically communicate with each other by emitting events in the
-context of a virtual "room". Room data is replicated across *all of the
-homeservers* whose users are participating in a given room. As such, *no
-single homeserver has control or ownership over a given room*. Homeservers
-model communication history as a partially ordered graph of events known as
-the room's "event graph", which is synchronised with eventual consistency
-between the participating servers using the "Server-Server API". This process
-of synchronising shared conversation history between homeservers run by
-different parties is called "Federation". Matrix optimises for the the
-Availability and Partitioned properties of CAP theorem at
-the expense of Consistency.
+客户端通常通过在一个虚拟“房间”的上下文下发出事件来相互交流。房间数据在用户参与了这个房间的 *所有的homeserver* 之间复制。
+像这样，*没有一个单独的homeserver拥有一个房间的控制或所有权*。
+Homeserver将通信历史建模为一个被称为房间的“事件图”的部分有序的事件的图，它会在参与的服务器之间通过使用“服务器-服务器 API”最终一致地同步。
+这个在不同homeserver间同步共享交谈历史的过程称为“联盟(Federation)”。
+Matrix优化了CAP定理中的可用性和网络分区性，以一致性为代价。
 
-For example, for client A to send a message to client B, client A performs an
-HTTP PUT of the required JSON event on its homeserver (HS) using the
-client-server API. A's HS appends this event to its copy of the room's event
-graph, signing the message in the context of the graph for integrity. A's HS
-then replicates the message to B's HS by performing an HTTP PUT using the
-server-server API. B's HS authenticates the request, validates the event's
-signature, authorises the event's contents and then adds it to its copy of the
-room's event graph. Client B then receives the message from his homeserver via
-a long-lived GET request.
+例如，客户端A发送消息给客户端B，客户端A用客户端-服务器API在它的homeserver(HS)上做了一个所需JSON事件的HTTP PUT操作。A的HS把这个事件追加到它的这个房间的事件图的复本上，
+为了一致性，在图的上下文中对这个消息签名。接着A的HS用服务器-服务器API做一个HTTP PUT复制这个消息到B的HS上。B的HS认证这个请求，检查这个事件的签名的有效性，对事件的内容授权，然后把它添加到房间事件图的复本上。客户端B接着通过一个长时间存活的GET请求从他的homeserver上接收消息。
 
 ::
 
