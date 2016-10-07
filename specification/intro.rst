@@ -196,49 +196,27 @@ Matrix优化了CAP定理中的可用性和网络分区性，以一致性为代�
 
 联盟在多个homeserver之间维护每个房间的 *共享数据结构* 。数据被分割为 ``消息事件`` 和 ``状态事件`` 。
 
-events:
-  These describe transient 'once-off' activity in a room such as an
-  instant messages, VoIP call setups, file transfers, etc. They generally
-  describe communication activity.
+消息事件:
+  这些描述了房间内短暂的“一次性”活动，例如即时消息、VoIP呼叫建立、文件传输等等。它们通常描述交流活动。
 
-State events:
-  These describe updates to a given piece of persistent information
-  ('state') related to a room, such as the room's name, topic, membership,
-  participating servers, etc. State is modelled as a lookup table of key/value
-  pairs per room, with each key being a tuple of ``state_key`` and ``event type``.
-  Each state event updates the value of a given key.
+状态事件:
+  这些描述了和房间关联的一个给定的持续性信息（“状态”）的更新，例如房间的名字、主题、资格、参与的服务器等等。状态由一个每房间一个的键值对的查找表刻画，每个关键词为一个 ``状态关键字`` 和 ``事件类型`` 的元组。
+  每个状态事件更新一个给定关键字的值。
 
-The state of the room at a given point is calculated by considering all events
-preceding and including a given event in the graph. Where events describe the
-same state, a merge conflict algorithm is applied. The state resolution
-algorithm is transitive and does not depend on server state, as it must
-consistently select the same event irrespective of the server or the order the
-events were received in. Events are signed by the originating server (the
-signature includes the parent relations, type, depth and payload hash) and are
-pushed over federation to the participating servers in a room, currently using
-full mesh topology. Servers may also request backfill of events over federation
-from the other servers participating in a room.
+在一个给定时间点的房间状态通过考虑图中所给定事件及其之前的所有事件计算。在事件描述相同状态的时候，一个合并冲突算法会被使用。状态演化算法是传递的并且不以来服务器状态，因为它必须一致地选择相同的事件，不考虑服务器或者接收进来的事件的顺序。事件被原先的服务器签名（签名包括父子关系、类型、深度和载荷散列）并且通过联盟推送到房间里参与的服务器，当前正在使用全连接(full mesh)技术。服务器也可以通过从参与一个房间的其他服务器的联盟请求事件回填(backfill of events).
 
-
-Room Aliases
+房间别名
 ++++++++++++
 
-Each room can also have multiple "Room Aliases", which look like::
+每个房间同时可以有多个“房间别名”，他们的形式是::
 
   #room_alias:domain
 
-See the `标识符语法`_ section for full details of the structure of
-a room alias.
+见 `标识符语法`_ 一节以获得一个房间别名结构的完整细节。
 
-A room alias "points" to a room ID and is the human-readable label by which
-rooms are publicised and discovered.  The room ID the alias is pointing to can
-be obtained by visiting the domain specified. Note that the mapping from a room
-alias to a room ID is not fixed, and may change over time to point to a
-different room ID. For this reason, Clients SHOULD resolve the room alias to a
-room ID once and then use that ID on subsequent requests.
+一个房间别名“指向”一个房间ID，并且是人类可读的标签，房间通过它被公布和发现。别名指向的房间ID可以通过访问指定的域获得。注意从一个房间别名到一个房间ID的映射并不是固定的，并且可能随着事件变化去指向一个不同的房间ID。因为这个原因，客户端应当解析房间别名至一个房间ID一次，然后在接下来的请求用那个ID。
 
-When resolving a room alias the server will also respond with a list of servers
-that are in the room that can be used to join via.
+在解析一个房间别名的时候，服务器同时会和房间中可以通过其加入的服务器响应。
 
 ::
 
@@ -254,7 +232,7 @@ that are in the room that can be used to join via.
    | #bike   >> !4rguxf:matrix.org  |
    |________________________________|
 
-Identity
+身份标识
 ~~~~~~~~
 
 Users in Matrix are identified via their Matrix user ID. However,
